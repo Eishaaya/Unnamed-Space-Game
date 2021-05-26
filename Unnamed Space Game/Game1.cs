@@ -7,23 +7,24 @@ namespace Unnamed_Space_Game
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
         Spaceship ship;
+        Camera camera;
 
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 1000;
-            _graphics.PreferredBackBufferHeight = 1000;
-            _graphics.ApplyChanges();
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.ApplyChanges();
             base.Initialize();
         }
 
@@ -34,14 +35,14 @@ namespace Unnamed_Space_Game
             ObjectPool<Particle>.Instance.Populate(30, () => new Particle(null, Vector2.Zero, Color.White, 0, SpriteEffects.None, Vector2.Zero, Vector2.Zero, 0, Vector2.Zero));
             ObjectPool<ParticleEffect>.Instance.Populate(3, () => new ParticleEffect());
 
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ship = new Spaceship(image: Content.Load<Texture2D>("Ship"),
                                  location: new Vector2(500, 500),
                                  color: Color.White,
                                  Engine: 10,
                                  health: 100,
-                                 RotationLimit: MathHelper.ToRadians(360),
+                                 RotationLimit: MathHelper.ToRadians(45),
                                  rotation: 0,
                                  GunSpots: new List<Vector2> { new Vector2(69, 0), new Vector2(81, 0) },
                                  EngineSpots: new List<Vector2> { new Vector2(75.5f, 120) },
@@ -89,6 +90,10 @@ namespace Unnamed_Space_Game
                                  scale: 1,
                                  depth: 1, 
                                  defaultETime: 1);
+
+            camera = new Camera(ship, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice);
+
+            #region Stan's Pain
 
             /*
              
@@ -147,21 +152,22 @@ namespace Unnamed_Space_Game
             //var ship1 = SpaceshipBuilder.FromTexturePack("Ship")
             //                            .WithWeapon<Laser>(laserType: Lasers.Red)
             //                            .
-
+            #endregion
         }
 
         protected override void Update(GameTime gameTime)
         {
             ship.Update(gameTime);
+            camera.Update();
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spriteBatch.Begin();
-            ship.Draw(_spriteBatch);
-            _spriteBatch.End();
+            spriteBatch.Begin(effect: camera.Effect);
+            ship.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

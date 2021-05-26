@@ -8,7 +8,7 @@ using System.Text;
 namespace Unnamed_Space_Game
 {
 
-    class Spaceship : Sprite
+    class Spaceship : Sprite, IFollowable
     {
         public enum MoveState
         {
@@ -30,7 +30,7 @@ namespace Unnamed_Space_Game
             Back,
             Forwards
         };
-        Vector2 startPosition;
+        public Vector2 Position { get; private set; }
         float rotationLimit;
         List<Projectile> shots;
         Vector2 speed;
@@ -115,7 +115,7 @@ namespace Unnamed_Space_Game
 
             gunSpots = GunSpots;
             engineSpots = EngineSpots;
-            startPosition = location;
+            Position = location;
             shots = new List<Projectile>();
             engine = Engine;
             rotationLimit = RotationLimit;
@@ -197,7 +197,7 @@ namespace Unnamed_Space_Game
             }
             foreach (AnimatingSprite doneFlash in DoneFrames)
             {
-                if (doneFlash.Fade(20))
+                if (doneFlash.Fade(60))
                 {
                     laserFlashes.Remove(doneFlash);
                     ObjectPool<AnimatingSprite>.Instance.Return<AnimatingSprite>(doneFlash);
@@ -260,12 +260,12 @@ namespace Unnamed_Space_Game
             }
             else if (CurrentState == MoveState.Stalled)
             {
-                if (CurrentTurn == TurnState.None && Location != startPosition)
+                if (CurrentTurn == TurnState.None && Location != Position)
                 {
                     stallTime.Tick(gametime);
                     if (stallTime.Ready(false))
                     {
-                        Location = Vector2.Lerp(Location, new Vector2(Location.X, startPosition.Y), .01f);
+                        Position = Vector2.Lerp(Position, new Vector2(Position.X, Location.Y), .01f);
                     }
                     speed = Vector2.Zero;
                 }
