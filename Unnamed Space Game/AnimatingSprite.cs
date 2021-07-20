@@ -19,13 +19,18 @@ namespace Unnamed_Space_Game
                 frames = list;
             }
         }
-        public List<Rectangle> Frames { get; set; }
-        List<Vector2> origins;
+        public Rectangle[] Frames { get; set; }
+        Vector2[] origins;
         public TimeSpan frametime {get; set;}
         TimeSpan tick;
         public int currentframe;
 
-        public AnimatingSprite (Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, Rectangle hitbox, Vector2 origin, float scale, float depth, List<Rectangle> frames, int time, List<Vector2> Origins = null)
+        public bool LastFrame 
+        {
+            get => currentframe == Frames.Length - 1;
+        }
+
+        public AnimatingSprite (Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, Rectangle hitbox, Vector2 origin, float scale, float depth, Rectangle[] frames, int time, Vector2[] Origins = null)
             :base(image, location, color, rotation, effects, origin, scale, depth)
         {
             Frames = frames;
@@ -35,13 +40,13 @@ namespace Unnamed_Space_Game
             currentframe = 0;
 
 
-            if (origins != null && origins.Count < frames.Count)
+            if (origins != null && origins.Length < frames.Length)
             {
                 origins = null;
             }
 
         }
-        public void SetAnimatingSprite(Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, Rectangle hitbox, Vector2 origin, float scale, float depth, List<Rectangle> frames, int time, List<Vector2> Origins = null)
+        public void SetAnimatingSprite(Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, Rectangle hitbox, Vector2 origin, float scale, float depth, Rectangle[] frames, int time, Vector2[] Origins = null)
         {
             Frames = frames;
             frametime = new TimeSpan(0, 0, 0, 0, time);
@@ -50,7 +55,7 @@ namespace Unnamed_Space_Game
             currentframe = 0;
 
 
-            if (origins != null && origins.Count < frames.Count)
+            if (origins != null && origins.Length < frames.Length)
             {
                 origins = null;
             }
@@ -84,7 +89,7 @@ namespace Unnamed_Space_Game
                 currentframe++;
                 tick = TimeSpan.Zero;
             }
-            if(currentframe >= Frames.Count)
+            if(currentframe >= Frames.Length)
             {
                 currentframe = 0;
             }

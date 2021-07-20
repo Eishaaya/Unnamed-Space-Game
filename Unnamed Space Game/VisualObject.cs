@@ -40,7 +40,7 @@ namespace Unnamed_Space_Game
             originalColor = color;
             oldScale = Scale;
             oldRotation = rotation;
-            random = new Random();
+            random = Extensions.random;
 
             offset = Vector2.Zero;
             moved = false;

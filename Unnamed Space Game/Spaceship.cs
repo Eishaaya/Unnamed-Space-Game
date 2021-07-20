@@ -61,8 +61,8 @@ namespace Unnamed_Space_Game
         Timer stallTime;
         List<AnimatingSprite> laserFlashes;
         Texture2D flashImage;
-        List<Rectangle> flashFrames;
-        List<Vector2> flashOrigins;
+        Rectangle[] flashFrames;
+        Vector2[] flashOrigins;
         float flashScale;
         int flashTime;
         ParticleEffect exhaust;
@@ -78,7 +78,7 @@ namespace Unnamed_Space_Game
             //shots
             float sDamage, float sSpeed, float sAcc, float sScale, int sLife, Texture2D sImage,
             //flash
-            Texture2D fImage, List<Rectangle> fFrames, List<Vector2> fOrigins, int fTime, float fScale,
+            Texture2D fImage, Rectangle[] fFrames, Vector2[] fOrigins, int fTime, float fScale,
             //Exhaust
             Texture2D eImage, float eSpeed, int eTime, int eChange, Vector2 eScale, 
             //basic
@@ -186,7 +186,7 @@ namespace Unnamed_Space_Game
             var DoneFrames = new List<AnimatingSprite>();
             foreach (AnimatingSprite flash in laserFlashes)
             {
-                if (flash.currentframe == flash.Frames.Count - 1)
+                if (flash.currentframe == flash.Frames.Length - 1)
                 {
                     DoneFrames.Add(flash);
                 }

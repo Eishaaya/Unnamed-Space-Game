@@ -8,17 +8,34 @@ namespace Unnamed_Space_Game
 {
     class Enemy : AnimatingSprite
     {
-        public enum EnemyState : byte
+        public enum EnemyState
         {
             Idle,
             Moving,
             Attacking,
             Dying
         }
-        bool isDead;
+        public enum MoveType
+        {
+            Swoop,
+            Zigzag,
+            Charge,
+            Teleport
+        }
+        public enum AttackType
+        {
+            OneHit,
+            Brawl,
+            Kamikaze
+        }
+
+        protected bool isDead;
+        public MoveType moveType { get; }
+        public AttackType attackType { get; }
         public EnemyState CurrentState { get; private set; }
         public float Attack { get; }
         private float health = default;
+        public float AttackRange { get; }
         public float Health
         {
             get => health;
@@ -33,13 +50,32 @@ namespace Unnamed_Space_Game
             }
         }
 
-        public Enemy(Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, float attack, float health, Rectangle hitbox, Vector2 origin, float scale, float depth, List<List<Rectangle>> frames, int time, List<List<Vector2>> Origins = null)
-          : base(image, location, color, rotation, effects, hitbox, origin, scale, depth, frames[(int)EnemyState.Idle], time, Origins == null? null : Origins[(int)EnemyState.Idle])
+        protected Rectangle[][][] totalFrames;
+
+        public Enemy(Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, float attack, float attackrange, float health, MoveType movetype, AttackType attacktype, Rectangle hitbox, Vector2 origin, float scale, float depth, Rectangle[][][] totalframes, int time, Vector2[][][] Origins = null)
+          : base(image, location, color, rotation, effects, hitbox, origin, scale, depth, totalframes[(int)EnemyState.Idle][0], time, Origins == null? null : Origins[(int)EnemyState.Idle][0])
         {
+            moveType = movetype;
+            attackType = attacktype;
             CurrentState = EnemyState.Idle;
             isDead = false;
             Attack = attack;
             Health = health;
+            AttackRange = attackrange;
+            totalFrames = totalframes;
+        }
+
+        public void Update(GameTime time)
+        {
+            if (CurrentState == EnemyState.Idle)
+            {
+                if (LastFrame)
+                {
+                    var idleArray = totalFrames[(int)EnemyState.Idle];
+                    Frames = idleArray[random.Next(idleArray.Length)];
+                    
+                }
+            }
         }
     }
 }
