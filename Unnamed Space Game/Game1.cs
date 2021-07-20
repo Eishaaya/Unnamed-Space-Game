@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Unnamed_Space_Game
 {
@@ -112,10 +113,11 @@ namespace Unnamed_Space_Game
             Color[] colors = new Color[test.Width * test.Height];
             test.GetData(colors);
 
-           
+            var files = Directory.GetFiles(@"Z:\Unnamed-Space-Game\Unnamed Space Game\Small Pistachio Alien\IdleSway");
+
             for (int i = 0; i < 43; i++)
             {
-                frames.Add(Content.Load<Texture2D>($"Small Pistachio Alien/IdleSway/Small Pistachio Alien shake {i + 1}"));
+                frames.Add(Content.Load<Texture2D>($"Small Pistachio Alien/IdleSway/Small Pistachio Alien shake {i}"));
             }
             
             camera = new Camera(ship, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice);
