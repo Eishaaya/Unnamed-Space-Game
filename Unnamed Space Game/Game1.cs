@@ -16,7 +16,7 @@ namespace Unnamed_Space_Game
         Texture2D test;
         Enemy testEnemy;
         Camera camera;
-        List<Texture2D> frames = new List<Texture2D>();
+        Texture2D[] frames;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -117,7 +117,7 @@ namespace Unnamed_Space_Game
 
             for (int i = 0; i < 43; i++)
             {
-                frames.Add(Content.Load<Texture2D>($"Small Pistachio Alien/IdleSway/Small Pistachio Alien shake {i}"));
+                frames[i] = Content.Load<Texture2D>($"Small Pistachio Alien/IdleSway/Small Pistachio Alien shake {i}");
             }
             
             camera = new Camera(ship, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice);

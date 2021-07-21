@@ -21,9 +21,33 @@ namespace Unnamed_Space_Game
 
         #region behaviors
 
-        public static void Move (this Enemy enemy, Enemy.MoveType type, int moveNumber)
+        public static void Idle(this Enemy enemy)
         {
 
+        }
+
+        public static void Move(this Enemy enemy, Enemy.MoveType type, int[] moveNumber)
+        {
+            var bounds = Game1.bounds;
+
+            if (enemy.CurrentState != Enemy.EnemyState.Attacking && enemy.CurrentState != Enemy.EnemyState.Dying)
+            {
+                enemy.CurrentState = Enemy.EnemyState.Moving;
+            }
+
+
+            switch (type)
+            {
+                case Enemy.MoveType.Swoop:
+
+                    break;
+                case Enemy.MoveType.Teleport:
+                    break;
+                case Enemy.MoveType.Zigzag:
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion

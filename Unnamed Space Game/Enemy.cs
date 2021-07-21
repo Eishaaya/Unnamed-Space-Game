@@ -32,7 +32,7 @@ namespace Unnamed_Space_Game
         protected bool isDead;
         public MoveType moveType { get; }
         public AttackType attackType { get; }
-        public EnemyState CurrentState { get; private set; }
+        public EnemyState CurrentState { get; set; }
         public float Attack { get; }
         private float health = default;
         public float AttackRange { get; }
@@ -50,10 +50,10 @@ namespace Unnamed_Space_Game
             }
         }
 
-        protected Rectangle[][][] totalFrames;
+        protected AnimationFrame[][][] totalFrames;
 
-        public Enemy(Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, float attack, float attackrange, float health, MoveType movetype, AttackType attacktype, Rectangle hitbox, Vector2 origin, float scale, float depth, Rectangle[][][] totalframes, int time, Vector2[][][] Origins = null)
-          : base(image, location, color, rotation, effects, hitbox, origin, scale, depth, totalframes[(int)EnemyState.Idle][0], time, Origins == null? null : Origins[(int)EnemyState.Idle][0])
+        public Enemy(Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, float attack, float attackrange, float health, MoveType movetype, AttackType attacktype, Rectangle hitbox, Vector2 origin, float scale, float depth, AnimationFrame[][][] totalframes, int time, Vector2[][][] Origins = null)
+          : base(image, location, color, rotation, effects, hitbox, origin, scale, depth, totalframes[(int)EnemyState.Idle][0], time, Origins == null ? null : Origins[(int)EnemyState.Idle][0])
         {
             moveType = movetype;
             attackType = attacktype;
@@ -73,9 +73,10 @@ namespace Unnamed_Space_Game
                 {
                     var idleArray = totalFrames[(int)EnemyState.Idle];
                     Frames = idleArray[random.Next(idleArray.Length)];
-                    
+
                 }
             }
+            Animate(time);
         }
     }
 }
