@@ -61,7 +61,7 @@ namespace Unnamed_Space_Game
         Timer stallTime;
         List<AnimatingSprite> laserFlashes;
         Texture2D flashImage;
-        AnimationFrame[] flashFrames;
+        RectangleFrame[] flashFrames;
         Vector2[] flashOrigins;
         float flashScale;
         int flashTime;
@@ -78,7 +78,7 @@ namespace Unnamed_Space_Game
             //shots
             float sDamage, float sSpeed, float sAcc, float sScale, int sLife, Texture2D sImage,
             //flash
-            Texture2D fImage, AnimationFrame[] fFrames, Vector2[] fOrigins, int fTime, float fScale,
+            Texture2D fImage, RectangleFrame[] fFrames, Vector2[] fOrigins, int fTime, float fScale,
             //Exhaust
             Texture2D eImage, float eSpeed, int eTime, int eChange, Vector2 eScale, 
             //basic

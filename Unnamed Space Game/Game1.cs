@@ -69,7 +69,7 @@ namespace Unnamed_Space_Game
                                  sLife: 1000,
                                  sImage: Content.Load<Texture2D>("Laser"),
                                  fImage: Content.Load<Texture2D>("LaserPewPew"),
-                                 fFrames: new Rectangle[]
+                                 fFrames: new RectangleFrame[]
                                  {
                                     new Rectangle(389, 711, 47, 47),
                                     new Rectangle(374, 560, 78, 54),                      
