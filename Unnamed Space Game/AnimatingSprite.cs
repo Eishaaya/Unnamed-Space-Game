@@ -68,7 +68,7 @@ namespace Unnamed_Space_Game
 
         public bool LastFrame 
         {
-            get => currentframe == Frames.Length - 1;
+            get; private set;
         }
 
         public AnimatingSprite (Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, Rectangle hitbox, Vector2 origin, float scale, float depth, AnimationFrame[] frames, int time, Vector2[] Origins = null)
@@ -124,6 +124,7 @@ namespace Unnamed_Space_Game
         }
         public void Animate(GameTime gametime)
         {
+            LastFrame = false;
             tick += gametime.ElapsedGameTime;
             if(tick >= frametime)
             {
@@ -133,6 +134,7 @@ namespace Unnamed_Space_Game
             if(currentframe >= Frames.Length)
             {
                 currentframe = 0;
+                LastFrame = true;
             }
         }   
         public override void Draw(SpriteBatch batch)

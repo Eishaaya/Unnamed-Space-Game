@@ -3,7 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Linq;
 
 namespace Unnamed_Space_Game
 {
@@ -14,9 +17,9 @@ namespace Unnamed_Space_Game
         private SpriteBatch spriteBatch;
         Spaceship ship;
         Texture2D test;
-        Enemy testEnemy;
+        Enemy testAnimatingSprite;
         Camera camera;
-        Texture2D[] frames;
+        TextureFrame[][][] frames = new TextureFrame[5][][];
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -72,25 +75,25 @@ namespace Unnamed_Space_Game
                                  fFrames: new RectangleFrame[]
                                  {
                                     new Rectangle(389, 711, 47, 47),
-                                    new Rectangle(374, 560, 78, 54),                      
-                                    new Rectangle(361, 421, 107, 53),                     
-                                    new Rectangle(361, 186, 120, 86),                     
-                                    new Rectangle(1191, 660, 267, 225),                   
-                                    new Rectangle(1198, 444, 221, 211),                   
-                                                                                          
-                                    new Rectangle(1192, 183, 232, 200),                   
-                                                                                          
-                                 },                                                       
-                                 fOrigins: new Vector2[]                            
-                                 {                                                        
-                                    new Vector2(410 - 389, 739 - 711),                    
-                                    new Vector2(410 - 374, 600 - 560),                    
-                                    new Vector2(421 - 361, 462 - 421),                    
-                                    new Vector2(422 - 361, 255 - 186),                    
-                                    new Vector2(1317 - 1191, 820 - 660),                  
-                                                                                          
-                                    new Vector2(1311 - 1192, 348 - 183),                  
-                                    new Vector2(1313 - 1198, 599 - 444),                  
+                                    new Rectangle(374, 560, 78, 54),
+                                    new Rectangle(361, 421, 107, 53),
+                                    new Rectangle(361, 186, 120, 86),
+                                    new Rectangle(1191, 660, 267, 225),
+                                    new Rectangle(1198, 444, 221, 211),
+
+                                    new Rectangle(1192, 183, 232, 200),
+
+                                 },
+                                 fOrigins: new Vector2[]
+                                 {
+                                    new Vector2(410 - 389, 739 - 711),
+                                    new Vector2(410 - 374, 600 - 560),
+                                    new Vector2(421 - 361, 462 - 421),
+                                    new Vector2(422 - 361, 255 - 186),
+                                    new Vector2(1317 - 1191, 820 - 660),
+
+                                    new Vector2(1311 - 1192, 348 - 183),
+                                    new Vector2(1313 - 1198, 599 - 444),
 
                                  },
                                  fTime: 30,
@@ -107,20 +110,18 @@ namespace Unnamed_Space_Game
                                  defaultETime: 1);
             #endregion
 
-            //testEnemy = new Enemy()
+            var swayFrames = LoadFromFolder("Small Pistachio Alien", "IdleSway");
+            var blinkFrames = LoadFromFolder("Small Pistachio Alien", "Blink");
 
-            test = Content.Load<Texture2D>("Small_Pistachio_Alien");
-            Color[] colors = new Color[test.Width * test.Height];
-            test.GetData(colors);
+            frames[0] = new TextureFrame[2][];
+            frames[(int)Enemy.EnemyState.Idle][0] = swayFrames;
+            frames[(int)Enemy.EnemyState.Idle][1] = blinkFrames;
 
-            var files = Directory.GetFiles(@"Z:\Unnamed-Space-Game\Unnamed Space Game\Small Pistachio Alien\IdleSway");
 
-            for (int i = 0; i < 43; i++)
-            {
-                frames[i] = Content.Load<Texture2D>($"Small Pistachio Alien/IdleSway/Small Pistachio Alien shake {i}");
-            }
-            
+            testAnimatingSprite = new Enemy(null, new Vector2(500, 500), Color.White, 0, SpriteEffects.None, 0, 0, 1, Enemy.MoveType.Swoop, Enemy.AttackType.OneHit, Rectangle.Empty, Vector2.Zero, 1, 1, frames, 35);
+
             camera = new Camera(ship, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice);
+
 
             #region Stan's Pain
 
@@ -184,8 +185,52 @@ namespace Unnamed_Space_Game
             #endregion
         }
 
+        TextureFrame[] LoadFromFolder(params string[] folderPath)
+        {
+            var currentDir = Directory.GetCurrentDirectory();
+
+            var path = Path.Combine(currentDir, "Content");
+            for (int i = 0; i < folderPath.Length; i++)
+            {
+                path = Path.Combine(path, folderPath[i]);
+            }
+
+            //var IdleFolderPath = Path.Combine(topLevelPathToSmallPistachioAlien, innerFolderPath);
+
+            Dictionary<int, string> map = new Dictionary<int, string>();
+            string[] temp = Directory.GetFiles(path);
+            foreach (var x in temp)
+            {
+                var fileName = Path.GetFileName(x);
+                fileName = fileName.Substring(0, fileName.Length - 4);
+
+                //Split by space, grab last item (that's your number) parse that then add to map
+                string[] split = fileName.Split(' ');
+                int key = int.Parse(split[split.Length - 1]);
+
+                string returnPath = "";
+                for (int i = 0; i < folderPath.Length; i++)
+                {
+                    returnPath = Path.Combine(returnPath, folderPath[i]);
+                }
+
+                returnPath = Path.Combine(returnPath, fileName);
+
+                map.Add(key, returnPath);
+            }
+
+            TextureFrame[] frames = new TextureFrame[map.Count];
+            for (int i = 0; i < frames.Length; i++)
+            {
+                frames[i] = Content.Load<Texture2D>(map[i]);
+            }
+
+            return frames;
+        }
+
         protected override void Update(GameTime gameTime)
         {
+            testAnimatingSprite.Update(gameTime);
             ship.Update(gameTime);
             camera.Update();
             base.Update(gameTime);
@@ -196,6 +241,7 @@ namespace Unnamed_Space_Game
             GraphicsDevice.Clear(Color.FromNonPremultiplied(20, 20, 20, 255));
             spriteBatch.Begin(effect: camera.Effect);
             ship.Draw(spriteBatch);
+            testAnimatingSprite.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
