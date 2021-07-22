@@ -19,7 +19,7 @@ namespace Unnamed_Space_Game
         Texture2D test;
         Enemy testAnimatingSprite;
         Camera camera;
-        TextureFrame[][][] frames = new TextureFrame[5][][];
+        Dictionary<Enemy.EnemyState, FrameObject> frames = new Dictionary<Enemy.EnemyState, FrameObject>();
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -113,9 +113,10 @@ namespace Unnamed_Space_Game
             var swayFrames = LoadFromFolder("Small Pistachio Alien", "IdleSway");
             var blinkFrames = LoadFromFolder("Small Pistachio Alien", "Blink");
 
-            frames[0] = new TextureFrame[2][];
-            frames[(int)Enemy.EnemyState.Idle][0] = swayFrames;
-            frames[(int)Enemy.EnemyState.Idle][1] = blinkFrames;
+            frames[Enemy.EnemyState.Idle] = new FrameObject(new TextureFrame[2][], new int[] { 100, 20 });
+            AnimationFrame[][] idleFrame = frames[Enemy.EnemyState.Idle];
+            idleFrame[0] = swayFrames;
+            idleFrame[1] = blinkFrames;
 
 
             testAnimatingSprite = new Enemy(null, new Vector2(500, 500), Color.White, 0, SpriteEffects.None, 0, 0, 1, Enemy.MoveType.Swoop, Enemy.AttackType.OneHit, Rectangle.Empty, Vector2.Zero, 1, 1, frames, 35);

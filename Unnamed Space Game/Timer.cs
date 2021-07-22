@@ -8,8 +8,12 @@ namespace Unnamed_Space_Game
 {
     public struct Timer
     {
-        TimeSpan wait;
+        public TimeSpan wait;
         TimeSpan until;
+
+        public static implicit operator TimeSpan (Timer timer) => timer.wait;
+        public static implicit operator Timer (TimeSpan span) => new Timer(span);
+        public static implicit operator Timer (int time) => new Timer(time);
 
         public Timer(TimeSpan until)
         {
@@ -23,7 +27,7 @@ namespace Unnamed_Space_Game
 
         public void Tick(GameTime time)
         {
-            wait += time.ElapsedGameTime;
+            this.wait += time.ElapsedGameTime;
         }
         
         public int GetMillies()
