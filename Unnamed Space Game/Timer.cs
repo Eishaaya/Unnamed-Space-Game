@@ -8,17 +8,17 @@ namespace Unnamed_Space_Game
 {
     public struct Timer
     {
-        public TimeSpan wait;
+        public TimeSpan Wait { get; set; }
         TimeSpan until;
 
-        public static implicit operator TimeSpan (Timer timer) => timer.wait;
+        public static implicit operator TimeSpan (Timer timer) => timer.until;
         public static implicit operator Timer (TimeSpan span) => new Timer(span);
         public static implicit operator Timer (int time) => new Timer(time);
 
         public Timer(TimeSpan until)
         {
             this.until = until;
-            this.wait = TimeSpan.Zero;
+            this.Wait = TimeSpan.Zero;
         }
 
 
@@ -27,7 +27,7 @@ namespace Unnamed_Space_Game
 
         public void Tick(GameTime time)
         {
-            this.wait += time.ElapsedGameTime;
+            Wait += time.ElapsedGameTime;
         }
         
         public int GetMillies()
@@ -37,11 +37,11 @@ namespace Unnamed_Space_Game
 
         public bool Ready(bool reset = true)
         {
-            if(wait >= until)
+            if(Wait >= until)
             {
                 if (reset)
                 {
-                    wait = TimeSpan.Zero;
+                    Wait = TimeSpan.Zero;
                 }
                 return true;
             }
@@ -50,7 +50,7 @@ namespace Unnamed_Space_Game
 
         public void Reset()
         {
-            wait = TimeSpan.Zero;
+            Wait = TimeSpan.Zero;
         }
     }
 }

@@ -62,8 +62,8 @@ namespace Unnamed_Space_Game
         //}
         public AnimationFrame[] Frames { get; set; }
         Vector2[] origins;
-        public TimeSpan frametime {get; set;}
-        TimeSpan tick;
+        public Timer frametime {get; set;}
+    //    TimeSpan tick;
         public int currentframe;
 
         public bool LastFrame 
@@ -76,7 +76,6 @@ namespace Unnamed_Space_Game
         {
             Frames = frames;
             frametime = new TimeSpan(0, 0, 0, 0, time);
-            tick = TimeSpan.Zero;
             origins = Origins;
             currentframe = 0;
 
@@ -91,7 +90,6 @@ namespace Unnamed_Space_Game
         {
             Frames = frames;
             frametime = new TimeSpan(0, 0, 0, 0, time);
-            tick = TimeSpan.Zero;
             origins = Origins;
             currentframe = 0;
 
@@ -125,11 +123,10 @@ namespace Unnamed_Space_Game
         public void Animate(GameTime gametime)
         {
             LastFrame = false;
-            tick += gametime.ElapsedGameTime;
-            if(tick >= frametime)
+            frametime.Wait += gametime.ElapsedGameTime;
+            if(frametime.Ready())
             {
                 currentframe++;
-                tick = TimeSpan.Zero;
             }
             if(currentframe >= Frames.Length)
             {
