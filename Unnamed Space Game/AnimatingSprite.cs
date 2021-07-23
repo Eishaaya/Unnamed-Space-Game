@@ -62,7 +62,7 @@ namespace Unnamed_Space_Game
         //}
         public AnimationFrame[] Frames { get; set; }
         Vector2[] origins;
-        public Timer frametime {get; set;}
+        protected Timer frametime;
     //    TimeSpan tick;
         public int currentframe;
 
@@ -123,7 +123,7 @@ namespace Unnamed_Space_Game
         public void Animate(GameTime gametime)
         {
             LastFrame = false;
-            frametime.Wait += gametime.ElapsedGameTime;
+            frametime.Tick(gametime);
             if(frametime.Ready())
             {
                 currentframe++;

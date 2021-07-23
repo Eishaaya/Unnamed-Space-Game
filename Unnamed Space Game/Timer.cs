@@ -8,7 +8,7 @@ namespace Unnamed_Space_Game
 {
     public struct Timer
     {
-        public TimeSpan Wait { get; set; }
+        TimeSpan Wait;
         TimeSpan until;
 
         public static implicit operator TimeSpan (Timer timer) => timer.until;
