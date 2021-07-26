@@ -144,7 +144,7 @@ namespace Unnamed_Space_Game
                 var temp = Vector2.Lerp(new Vector2(rotation, 0), new Vector2(oldRotation, 0), sped);
                 if (Vector2.Distance(temp, new Vector2(oldRotation, 0)) <= .01f)
                 {
-                    rotation = oldRotation;
+                    rotation = degreeSet;
                     rotated = true;
                 }
                 else

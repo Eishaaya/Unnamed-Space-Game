@@ -113,16 +113,15 @@ namespace Unnamed_Space_Game
             var swayFrames = LoadFromFolder("Small Pistachio Alien", "IdleSway");
             var blinkFrames = LoadFromFolder("Small Pistachio Alien", "Blink");
 
-            frames[Enemy.EnemyState.Idle] = new FrameObject(new TextureFrame[2][], new int[] { 100, 20 });
+            frames[Enemy.EnemyState.Idle] = new FrameObject(new TextureFrame[2][], new int[] { 35, 10 });
             AnimationFrame[][] idleFrame = frames[Enemy.EnemyState.Idle];
             idleFrame[0] = swayFrames;
             idleFrame[1] = blinkFrames;
 
 
-            testAnimatingSprite = new Enemy(null, new Vector2(500, 500), Color.White, 0, SpriteEffects.None, 0, 0, 1, Enemy.MoveType.Swoop, Enemy.AttackType.OneHit, Rectangle.Empty, Vector2.Zero, 1, 1, frames, 35);
+            testAnimatingSprite = new Enemy(null, new Vector2(500, 500), Color.White, 0, SpriteEffects.None, 0, 0, 1, Enemy.MoveType.Swoop, Enemy.AttackType.OneHit, Rectangle.Empty, new Vector2(167, 175), 1, 1, frames, 35);
 
             camera = new Camera(ship, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), GraphicsDevice);
-
 
             #region Stan's Pain
 
@@ -233,6 +232,9 @@ namespace Unnamed_Space_Game
         {
             testAnimatingSprite.Update(gameTime);
             ship.Update(gameTime);
+           // testAnimatingSprite.Rotate(360, .1f);
+           // testAnimatingSprite.Pulsate(200, .1f);
+           // testAnimatingSprite.Vibrate(200, .1f);            
             camera.Update();
             base.Update(gameTime);
         }
