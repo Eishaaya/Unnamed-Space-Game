@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,15 +9,8 @@ using System.Text;
 namespace Unnamed_Space_Game
 {
 
-    class Spaceship : Sprite, IFollowable
+    class Spaceship : Sprite, IFollowable, IMovable
     {
-        public enum MoveState
-        {
-            Stalled,
-            Forwards,
-            Backwards
-        };
-
         public enum TurnState
         {
             None,
@@ -33,17 +27,13 @@ namespace Unnamed_Space_Game
         public Vector2 Position { get; private set; }
         float rotationLimit;
         List<Projectile> shots;
-        Vector2 speed;
-        float engine;
         KeyboardState ks;
         Keys leftKey;
         Keys rightKey;
         Keys upKey;
         Keys downKey;
         Keys shootKey;
-        Vector2 momentum;
         LoopedFloat gunIndex;
-        public MoveState CurrentState { get; set; }
         public TurnState CurrentTurn { get; set; }
         public AutoMoveState AutoState { get; set; }
 
@@ -51,6 +41,8 @@ namespace Unnamed_Space_Game
         List<Vector2> engineSpots;
 
         public float Health { get; set; }
+        public MoveComponent Movement { get; set; }
+
         float shotDamage;
         float shotSpeed;
         float shotAcc;
@@ -80,15 +72,16 @@ namespace Unnamed_Space_Game
             //flash
             Texture2D fImage, RectangleFrame[] fFrames, Vector2[] fOrigins, int fTime, float fScale,
             //Exhaust
-            Texture2D eImage, float eSpeed, int eTime, int eChange, Vector2 eScale, 
+            Texture2D eImage, float eSpeed, int eTime, int eChange, Vector2 eScale,
             //basic
             SpriteEffects effects, Vector2 origin, float scale, float depth,
             //defaults
-            int defaultETime = 0, 
+            int defaultETime = 0,
             Keys LeftKey = Keys.A, Keys RightKey = Keys.D, Keys DownKey = Keys.S, Keys UpKey = Keys.W, Keys ShootKey = Keys.Space)
 
         : base(image, location, color, rotation, effects, origin, scale, depth)
         {
+            Movement = new MoveComponent(Engine, .03f); //make this a var at some point
             exhaust = new ParticleEffect();
             gunIndex = new LoopedFloat(0, GunSpots.Count - 1, 0);
             Health = health;
@@ -117,15 +110,12 @@ namespace Unnamed_Space_Game
             engineSpots = EngineSpots;
             Position = location;
             shots = new List<Projectile>();
-            engine = Engine;
             rotationLimit = RotationLimit;
             leftKey = LeftKey;
             rightKey = RightKey;
             upKey = UpKey;
             downKey = DownKey;
             shootKey = ShootKey;
-            CurrentState = MoveState.Stalled;
-            momentum = Vector2.Zero;
             reloadTime = new Timer(reload);
             stallTime = new Timer(resetTime);
 
@@ -141,7 +131,7 @@ namespace Unnamed_Space_Game
             {
                 var tempLocation = Vector2.Transform(engineSpot - Origin, Matrix.CreateRotationZ(rotation)) + Location;
                 var newPart = ObjectPool<Particle>.Instance.Borrow<Particle>();
-                newPart.SetParticle(exhaustImage, tempLocation, Color.Gold, Color.Red, rotation, effect, new Vector2(exhaustImage.Width / 2, exhaustImage.Height / 2), new Vector2((float) -Math.Sin(rotation) * exhaustSpeed, (float)Math.Cos(rotation) * exhaustSpeed) + new Vector2(0, momentum.Y), exhaustTime, exhaustScale, 1, 1, 0, false, random.Next((int)-exhaustSpeed, (int)exhaustSpeed), (int)exhaustSpeed, exhaustChange);
+                newPart.SetParticle(exhaustImage, tempLocation, Color.Gold, Color.Red, rotation, effect, new Vector2(exhaustImage.Width / 2, exhaustImage.Height / 2), new Vector2((float)-Math.Sin(rotation) * exhaustSpeed, (float)Math.Cos(rotation) * exhaustSpeed) + new Vector2(0, Movement.Momentum.Y), exhaustTime, exhaustScale, 1, 1, 0, false, random.Next((int)-exhaustSpeed, (int)exhaustSpeed), (int)exhaustSpeed, exhaustChange);
                 exhaust.AddParticle(newPart);
             }
         }
@@ -218,15 +208,15 @@ namespace Unnamed_Space_Game
 
             if (ks.IsKeyDown(upKey))
             {
-                CurrentState = MoveState.Forwards;
+                Movement.CurrentState = MoveComponent.MoveState.Forwards;
             }
             else if (ks.IsKeyDown(downKey))
             {
-                CurrentState = MoveState.Backwards;
+                Movement.CurrentState = MoveComponent.MoveState.Backwards;
             }
             else
             {
-                CurrentState = MoveState.Stalled;
+                Movement.CurrentState = MoveComponent.MoveState.Stalled;
             }
 
             if (ks.IsKeyDown(leftKey))
@@ -247,18 +237,7 @@ namespace Unnamed_Space_Game
                 CurrentTurn = TurnState.None;
             }
 
-
-            if (CurrentState == MoveState.Forwards)
-            {
-                speed = new Vector2(engine * (float)Math.Sin((double)rotation), engine * -(float)Math.Cos((double)rotation));
-                stallTime.Reset();
-            }
-            else if (CurrentState == MoveState.Backwards)
-            {
-                speed = new Vector2(engine * (float)Math.Sin((double)rotation), engine * (float)Math.Cos((double)rotation));
-                stallTime.Reset();
-            }
-            else if (CurrentState == MoveState.Stalled)
+            if (Movement.CurrentState == MoveComponent.MoveState.Stalled)
             {
                 if (CurrentTurn == TurnState.None && Location != Position)
                 {
@@ -267,15 +246,20 @@ namespace Unnamed_Space_Game
                     {
                         Position = Vector2.Lerp(Position, new Vector2(Position.X, Location.Y), .01f);
                     }
-                    speed = Vector2.Zero;
+                    Movement.Force = Vector2.Zero;
                 }
                 else
                 {
-                    speed = new Vector2(engine * (float)Math.Sin((double)rotation), 0);
+                    Movement.Force = new Vector2(Movement.Speed * (float)Math.Sin((double)rotation), 0);
                 }
             }
-            momentum = Vector2.Lerp(momentum, speed, .03f);
-            Location += momentum;
+            else
+            {
+                Movement.SetSpeed(rotation);
+                stallTime.Reset();
+            }
+            Movement.Update();
+            Location += Movement.Momentum;
         }
 
         public override void Draw(SpriteBatch batch)

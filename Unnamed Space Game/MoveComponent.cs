@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeleteMeMonogameTest
+namespace Unnamed_Space_Game
 {
     public class MoveComponent
     {
@@ -16,25 +16,34 @@ namespace DeleteMeMonogameTest
             Backwards
         };
         public MoveState CurrentState { get; set; }
-        public Vector2 Momentum { get; }
+        public Vector2 Momentum { get; private set; }
         public Vector2 Force { get; set; }
-        float speed;
+        public float Speed { get; private set; }
         float lerpSpeed;
 
-        public void setSpeed (float rotation)
+        public MoveComponent (float speed, float lSpeed)
+        {
+            CurrentState = MoveState.Stalled;
+            Momentum = Vector2.Zero;
+            Force = Vector2.Zero;
+            Speed = speed;
+            lerpSpeed = lSpeed;
+        }
+
+        public void SetSpeed (float rotation)
         {
             if (CurrentState == MoveState.Forwards)
             {
-                Force = new Vector2(speed * (float)Math.Sin((double)rotation), speed * -(float)Math.Cos((double)rotation));
+                Force = new Vector2(Speed * (float)Math.Sin((double)rotation), Speed * -(float)Math.Cos((double)rotation));
             }
             else if (CurrentState == MoveState.Backwards)
             {
-                Force = new Vector2(speed * (float)Math.Sin((double)rotation), speed * (float)Math.Cos((double)rotation));
+                Force = new Vector2(Speed * (float)Math.Sin((double)rotation), Speed * (float)Math.Cos((double)rotation));
             }
         }
         public void Update()
         {
-            Vector2.LerpPrecise(Momentum, Force, lerpSpeed);
+             Momentum = Vector2.LerpPrecise(Momentum, Force, lerpSpeed);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeleteMeMonogameTest
+namespace Unnamed_Space_Game
 {
     public interface IMovable
     {
