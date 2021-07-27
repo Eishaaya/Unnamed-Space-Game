@@ -20,8 +20,6 @@ namespace Unnamed_Space_Game
             }
         }
 
-        #region behaviors
-
         public static float AddTill(this float number, float endCondition, float amount)
         {
             while (number < endCondition)
@@ -55,6 +53,8 @@ namespace Unnamed_Space_Game
 
             return result;
         }
+
+        #region behaviors
 
         public static void Idle(this Enemy enemy)
         {
