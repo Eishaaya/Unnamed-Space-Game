@@ -8,7 +8,6 @@ using System.Text;
 
 namespace Unnamed_Space_Game
 {
-
     class Spaceship : Sprite, IFollowable, IMovable
     {
         public enum TurnState
@@ -18,13 +17,17 @@ namespace Unnamed_Space_Game
             Right
         }
 
-        public enum AutoMoveState
-        {
-            None,
-            Back,
-            Forwards
-        };
+        #region properties
+
+        public TurnState CurrentTurn { get; set; }
         public Vector2 Position { get; private set; }
+        public float Health { get; set; }
+        public MoveComponent Movement { get; set; }
+
+        #endregion
+
+        #region variables
+
         float rotationLimit;
         List<Projectile> shots;
         KeyboardState ks;
@@ -34,14 +37,9 @@ namespace Unnamed_Space_Game
         Keys downKey;
         Keys shootKey;
         LoopedFloat gunIndex;
-        public TurnState CurrentTurn { get; set; }
-        public AutoMoveState AutoState { get; set; }
 
         List<Vector2> gunSpots;
         List<Vector2> engineSpots;
-
-        public float Health { get; set; }
-        public MoveComponent Movement { get; set; }
 
         float shotDamage;
         float shotSpeed;
@@ -64,8 +62,11 @@ namespace Unnamed_Space_Game
         Vector2 exhaustScale;
         Timer exhaustTimer;
         int exhaustChange;
+        
+        #endregion
 
         //ship
+        #region constructor
         public Spaceship(Texture2D image, Vector2 location, Color color, float Engine, float health, float RotationLimit, float rotation, List<Vector2> GunSpots, List<Vector2> EngineSpots, int reload, int resetTime,
             //shots
             float sDamage, float sSpeed, float sAcc, float sScale, int sLife, Texture2D sImage,
@@ -124,6 +125,7 @@ namespace Unnamed_Space_Game
                 exhaustTimer = new Timer(30);
             }
         }
+        #endregion
 
         public void MakeExhaust()
         {
@@ -135,7 +137,6 @@ namespace Unnamed_Space_Game
                 exhaust.AddParticle(newPart);
             }
         }
-
         public void Shoot()
         {
             var newShot = ObjectPool<Projectile>.Instance.Borrow<Laser>();
@@ -149,53 +150,8 @@ namespace Unnamed_Space_Game
             gunIndex++;
         }
 
-        public void Update(GameTime gametime)
+        protected void CheckKeys ()
         {
-            exhaustTimer.Tick(gametime);
-            if (exhaustTimer.Ready())
-            {
-                MakeExhaust();
-            }
-            exhaust.Update(gametime);
-            reloadTime.Tick(gametime);
-            var deadPews = new List<Laser>();
-            foreach (Laser pewpew in shots)
-            {
-                pewpew.move(gametime);
-                if (pewpew.LifeTimer.Ready())
-                {
-                    ObjectPool<Projectile>.Instance.Return<Laser>(pewpew);
-                    deadPews.Add(pewpew);
-                }
-            }
-            foreach (Laser pooPew in deadPews)
-            {
-                shots.Remove(pooPew);
-            }
-
-            var DoneFrames = new List<AnimatingSprite>();
-            foreach (AnimatingSprite flash in laserFlashes)
-            {
-                if (flash.currentframe == flash.Frames.Length - 1)
-                {
-                    DoneFrames.Add(flash);
-                }
-                else
-                {
-                    flash.Animate(gametime);
-                }
-            }
-            foreach (AnimatingSprite doneFlash in DoneFrames)
-            {
-                if (doneFlash.Fade(60))
-                {
-                    laserFlashes.Remove(doneFlash);
-                    ObjectPool<AnimatingSprite>.Instance.Return<AnimatingSprite>(doneFlash);
-                }
-
-            }
-
-
             ks = Keyboard.GetState();
 
             if (ks.IsKeyDown(shootKey))
@@ -236,12 +192,64 @@ namespace Unnamed_Space_Game
                 rotation = MathHelper.Lerp(rotation, 0, .1f);
                 CurrentTurn = TurnState.None;
             }
-
+        }
+        protected void UpdateExhaust (GameTime gameTime)
+        {
+            exhaustTimer.Tick(gameTime);
+            if (exhaustTimer.Ready())
+            {
+                MakeExhaust();
+            }
+            exhaust.Update(gameTime);
+        }
+        protected void MoveRemoveShots(GameTime gameTime)
+        {
+            reloadTime.Tick(gameTime);
+            var deadPews = new List<Laser>();
+            foreach (Laser pewpew in shots)
+            {
+                pewpew.move(gameTime);
+                if (pewpew.LifeTimer.Ready())
+                {
+                    ObjectPool<Projectile>.Instance.Return<Laser>(pewpew);
+                    deadPews.Add(pewpew);
+                }
+            }
+            foreach (Laser pooPew in deadPews)
+            {
+                shots.Remove(pooPew);
+            }
+        }
+        protected void FadeUpdateFlashes(GameTime gameTime)
+        {
+            var DoneFrames = new List<AnimatingSprite>();
+            foreach (AnimatingSprite flash in laserFlashes)
+            {
+                if (flash.OnLastFrame)
+                {
+                    DoneFrames.Add(flash);
+                }
+                else
+                {
+                    flash.Animate(gameTime);
+                }
+            }
+            foreach (AnimatingSprite doneFlash in DoneFrames)
+            {
+                if (doneFlash.Fade(60))
+                {
+                    laserFlashes.Remove(doneFlash);
+                    ObjectPool<AnimatingSprite>.Instance.Return<AnimatingSprite>(doneFlash);
+                }
+            }
+        }
+        protected void MoveAndMoveCam(GameTime gameTime)
+        {
             if (Movement.CurrentState == MoveComponent.MoveState.Stalled)
             {
                 if (CurrentTurn == TurnState.None && Location != Position)
                 {
-                    stallTime.Tick(gametime);
+                    stallTime.Tick(gameTime);
                     if (stallTime.Ready(false))
                     {
                         Position = Vector2.Lerp(Position, new Vector2(Position.X, Location.Y), .01f);
@@ -262,6 +270,20 @@ namespace Unnamed_Space_Game
             Location += Movement.Momentum;
         }
 
+
+
+        public void Update(GameTime gameTime)
+        {
+            CheckKeys();
+
+            UpdateExhaust(gameTime);
+
+            MoveRemoveShots(gameTime);
+
+            FadeUpdateFlashes(gameTime);
+
+            MoveAndMoveCam(gameTime);
+        }
         public override void Draw(SpriteBatch batch)
         {
             exhaust.Draw(batch);

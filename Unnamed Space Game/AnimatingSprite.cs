@@ -71,6 +71,11 @@ namespace Unnamed_Space_Game
             get; private set;
         }
 
+        public bool OnLastFrame
+        {
+            get => currentframe == Frames.Length - 1;
+        }
+
         public AnimatingSprite (Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, Rectangle hitbox, Vector2 origin, float scale, float depth, AnimationFrame[] frames, int time, Vector2[] Origins = null)
             :base(image, location, color, rotation, effects, origin, scale, depth)
         {
