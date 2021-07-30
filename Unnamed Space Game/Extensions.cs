@@ -22,11 +22,7 @@ namespace Unnamed_Space_Game
 
         public static float AddTill(this float number, float endCondition, float amount)
         {
-            while (number < endCondition)
-            {
-                number += amount;
-            }
-            return number;
+            return number + (float)(int)((endCondition - number) / amount + .99f) * amount;
         }
 
         public static float LoopCalc(this float current, float target, float max, float min = 0)

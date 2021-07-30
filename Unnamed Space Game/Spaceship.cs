@@ -194,6 +194,7 @@ namespace Unnamed_Space_Game
             }
         }
         protected void UpdateExhaust (GameTime gameTime)
+
         {
             exhaustTimer.Tick(gameTime);
             if (exhaustTimer.Ready())

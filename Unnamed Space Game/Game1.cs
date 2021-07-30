@@ -39,9 +39,9 @@ namespace Unnamed_Space_Game
 
             base.Initialize();
         }
-
         protected override void LoadContent()
         {
+            var test = (-3.4f).AddTill(7.1f, 3.5f);
             Random randall = new Random();
 
             var stupid = randall.Previous(0, int.MaxValue);
