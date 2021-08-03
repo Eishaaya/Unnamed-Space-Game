@@ -75,7 +75,7 @@ namespace Unnamed_Space_Game
                     AnimationFrame[][] idleArray = idle;
                     var newFrames = random.Next(idleArray.Length);
                     Frames = idleArray[newFrames];
-                    frametime = idle.frameSpeed[newFrames];
+                    FrameTime = idle.frameSpeed[newFrames];
                 }
             }
             Animate(time);

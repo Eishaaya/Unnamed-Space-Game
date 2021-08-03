@@ -25,8 +25,6 @@ namespace Unnamed_Space_Game
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
         }
 

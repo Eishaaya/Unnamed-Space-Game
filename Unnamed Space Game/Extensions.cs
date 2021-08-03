@@ -20,6 +20,26 @@ namespace Unnamed_Space_Game
             }
         }
 
+        public static int Factorial(this int number)
+        {
+            int result = number;
+            while (number > 1)
+            {
+                number--;
+                result *= number;
+            }
+            return number;
+        }
+
+        public static int PascalIndex(int column, int row)
+        {
+            if (column > row)
+            {
+                return -1;
+            }
+            return row.Factorial() / (column.Factorial() * (row - column).Factorial());
+        }
+
         public static float AddTill(this float number, float endCondition, float amount)
         {
             return number + (float)(int)((endCondition - number) / amount + .99f) * amount;

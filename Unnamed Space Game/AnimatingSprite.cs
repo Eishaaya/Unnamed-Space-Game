@@ -62,7 +62,7 @@ namespace Unnamed_Space_Game
         //}
         public AnimationFrame[] Frames { get; set; }
         Vector2[] origins;
-        protected Timer frametime;
+        public Timer FrameTime { get; protected set; }
     //    TimeSpan tick;
         public int currentframe;
 
@@ -80,7 +80,7 @@ namespace Unnamed_Space_Game
             :base(image, location, color, rotation, effects, origin, scale, depth)
         {
             Frames = frames;
-            frametime = new TimeSpan(0, 0, 0, 0, time);
+            FrameTime = new TimeSpan(0, 0, 0, 0, time);
             origins = Origins;
             currentframe = 0;
 
@@ -94,7 +94,7 @@ namespace Unnamed_Space_Game
         public void SetAnimatingSprite(Texture2D image, Vector2 location, Color color, float rotation, SpriteEffects effects, Rectangle hitbox, Vector2 origin, float scale, float depth, AnimationFrame[] frames, int time, Vector2[] Origins = null)
         {
             Frames = frames;
-            frametime = new TimeSpan(0, 0, 0, 0, time);
+            FrameTime = new TimeSpan(0, 0, 0, 0, time);
             origins = Origins;
             currentframe = 0;
 
@@ -128,8 +128,8 @@ namespace Unnamed_Space_Game
         public void Animate(GameTime gametime)
         {
             LastFrame = false;
-            frametime.Tick(gametime);
-            if(frametime.Ready())
+            FrameTime.Tick(gametime);
+            if(FrameTime.Ready())
             {
                 currentframe++;
             }

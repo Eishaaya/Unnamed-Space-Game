@@ -68,8 +68,8 @@ namespace Unnamed_Space_Game
                 }
                 toggOns[i] = !toggOns[i];
                 toggles.Add(new Toggler(template.Image, template.Location + offSet, template.Color, template.rotation, template.effect, template.Origin, template.Scale, template.Depth, template.HoverColor, template.ClickedColor,
-                    new Sprite(template.ball.Image, template.ball.Location + offSet, template.ball.Color, template.ball.rotation, template.ball.effect, template.ball.Origin, template.ball.Scale, template.ball.Depth),
-                    new Sprite(template.bottomColor.Image, template.bottomColor.Location + offSet, template.bottomColor.Color, template.bottomColor.rotation, template.bottomColor.effect, template.bottomColor.Origin, template.bottomColor.Scale, template.bottomColor.Depth),
+                    new Sprite(template.Ball.Image, template.Ball.Location + offSet, template.Ball.Color, template.Ball.rotation, template.Ball.effect, template.Ball.Origin, template.Ball.Scale, template.Ball.Depth),
+                    new Sprite(template.BottomColor.Image, template.BottomColor.Location + offSet, template.BottomColor.Color, template.BottomColor.rotation, template.BottomColor.effect, template.BottomColor.Origin, template.BottomColor.Scale, template.BottomColor.Depth),
                     new ScalableSprite(template.MovingColor.Image, template.MovingColor.Location + offSet, template.MovingColor.Color, template.MovingColor.rotation, template.MovingColor.effect, template.MovingColor.Origin, template.MovingColor.scale, template.MovingColor.Depth, template.MovingColor.Scale), font, keyTypes[i + binds.Count], 50, 0, 0, togs[i]));
             }
         }
@@ -79,8 +79,8 @@ namespace Unnamed_Space_Game
             oldBinds = binds;
             for (int i = 0; i < toggles.Count; i++)
             {
-                toggOns[i] = !toggles[i].on;
-                toggles[i].done = false;
+                toggOns[i] = !toggles[i].On;
+                toggles[i].Done = false;
             }
         }
         public override List<bool> GetBools()
@@ -88,7 +88,7 @@ namespace Unnamed_Space_Game
             var allBools = new List<bool>();
             for (int i = 0; i < toggles.Count; i++)
             {
-                allBools.Add(!toggles[i].on);
+                allBools.Add(!toggles[i].On);
             }
             return allBools;
         }
@@ -122,7 +122,7 @@ namespace Unnamed_Space_Game
                     manny.bindsChanged = true;
                     for (int i = 0; i < toggles.Count; i++)
                     {
-                        toggles[i].on = !toggles[i].on;
+                        toggles[i].On = !toggles[i].On;
                     }
                     manny.back();
                     return;
@@ -133,7 +133,7 @@ namespace Unnamed_Space_Game
                     manny.back();
                     for (int i = 0; i < toggles.Count; i++)
                     {
-                        toggles[i].on = !toggOns[i];
+                        toggles[i].On = !toggOns[i];
                     }
                     return;
                 }
@@ -152,7 +152,7 @@ namespace Unnamed_Space_Game
                     {
                         if (i == 0)
                         {
-                            if (toggles[i].on)
+                            if (toggles[i].On)
                             {
                                 StopMusic();
                                 playMusic = false;
