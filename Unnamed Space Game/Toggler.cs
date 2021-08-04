@@ -61,7 +61,7 @@ namespace Unnamed_Space_Game
             return false;
         }
 
-        public void Move()
+        protected void Move()
         {
             if (!Done)
             {

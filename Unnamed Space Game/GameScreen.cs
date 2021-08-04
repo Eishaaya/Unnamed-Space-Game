@@ -19,7 +19,7 @@ namespace Unnamed_Space_Game
         AnimatingSprite[] animatingSprites;
         Button[] buttons;
         Keys[] keys;
-        Impact[] effects;
+        public Impact[] Effects { get; set; }
 
         public bool Lost {get; set;}
         Keys pauseKey;
@@ -32,7 +32,7 @@ namespace Unnamed_Space_Game
             this.animatingSprites = animatingSprites;
             this.keys = keys;
             this.buttons = buttons;
-            this.effects = effects;
+            this.Effects = effects;
 
             Lost = false;
             this.random = random;
@@ -63,6 +63,7 @@ namespace Unnamed_Space_Game
         public override void Update(GameTime time, Screenmanager manny)
         {
             base.Update(time, manny);
+            
             main.Update(time);
         }
         public override void Play(GameTime time)
