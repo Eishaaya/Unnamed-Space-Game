@@ -6,6 +6,10 @@ using System.Threading;
 
 namespace Unnamed_Space_Game
 {
+    class My
+    {
+        public int name;
+    }
     static class Extensions
     {
         public static Random random = new Random();
@@ -29,15 +33,6 @@ namespace Unnamed_Space_Game
                 result *= number;
             }
             return number;
-        }
-
-        public static int PascalIndex(int column, int row)
-        {
-            if (column > row)
-            {
-                return -1;
-            }
-            return row.Factorial() / (column.Factorial() * (row - column).Factorial());
         }
 
         public static float AddTill(this float number, float endCondition, float amount)
