@@ -20,6 +20,8 @@ namespace Unnamed_Space_Game
         Enemy testAnimatingSprite;
         Camera camera;
         Dictionary<Enemy.EnemyState, FrameObject> frames = new Dictionary<Enemy.EnemyState, FrameObject>();
+        Bezier testBezier;
+        Bezier timeBezier;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -181,6 +183,9 @@ namespace Unnamed_Space_Game
             //                            .WithWeapon<Laser>(laserType: Lasers.Red)
             //                            .
             #endregion
+
+            timeBezier = new Bezier(5, new double[] { 0, 1, 0, 1 });
+            testBezier = new Bezier(1, new double[] { 0, 0, 1, 1 });
         }
 
         TextureFrame[] LoadFromFolder(params string[] folderPath)
@@ -228,6 +233,9 @@ namespace Unnamed_Space_Game
 
         protected override void Update(GameTime gameTime)
         {
+            timeBezier.Update(gameTime);
+            testBezier.Update(timeBezier.Location);
+            testAnimatingSprite.Location = new Vector2((float)testBezier.Location * 1000, testAnimatingSprite.Location.Y);
             testAnimatingSprite.Update(gameTime);
             ship.Update(gameTime);
            // testAnimatingSprite.Rotate(360, .1f);

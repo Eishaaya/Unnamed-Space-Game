@@ -26,13 +26,13 @@ namespace Unnamed_Space_Game
 
         public static int Factorial(this int number)
         {
-            int result = number;
+            int result = 1;            
             while (number > 1)
             {
-                number--;
                 result *= number;
+                number--;
             }
-            return number;
+            return result;
         }
 
         public static float AddTill(this float number, float endCondition, float amount)

@@ -17,19 +17,57 @@ namespace Unnamed_Space_Game
             Y = y;
         }
     }
+
     class Bezier
     {
-        static Bezier Instance;
+        double timeMultiplier;
+        double time;
+        double[] points;
+        public double Location { get; set; }
+
+        public Bezier(double timeMulti, double[] points, double location = 0)
+        {
+            Location = location;
+            this.time = 0;
+            timeMultiplier = timeMulti;
+            this.points = points;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (time >= 1)
+            {
+                return;
+            }
+            time += (gameTime.ElapsedGameTime.TotalMilliseconds) / timeMultiplier / 1000;
+            Location = BezierFuncs.Get().BezierCalc(points, time);
+        }
+
+        public void Update(double thyme)
+        {    
+            time = thyme;
+            if (thyme >= 1)
+            {
+                time = 1;
+            }
+            Location = BezierFuncs.Get().BezierCalc(points, time);
+        }
+    }
+
+
+    class BezierFuncs
+    {
+        static BezierFuncs Instance;
         Dictionary<DualInt, int> cents;
-        public static Bezier Get()
+        public static BezierFuncs Get()
         {
             if (Instance == null)
             {
-                Instance = new Bezier();
+                Instance = new BezierFuncs();
             }
             return Instance;
         }
-        Bezier()
+        BezierFuncs()
         {
             cents = new Dictionary<DualInt, int>();
         }
@@ -55,7 +93,11 @@ namespace Unnamed_Space_Game
             {
                 return cents[key];
             }
-            var answer = row.Factorial() / (column.Factorial() * (row - column).Factorial());
+            var rowFact = row.Factorial();
+            var colFact = column.Factorial();
+            var bothFact = (row - column).Factorial();
+
+            var answer = rowFact / (colFact * bothFact);
             cents.Add(key, answer);
             return answer;            
         }
