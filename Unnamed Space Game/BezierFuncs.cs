@@ -7,7 +7,7 @@ using System.Text;
 namespace Unnamed_Space_Game
 {
     struct DualInt
-    {
+    {        
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -20,11 +20,28 @@ namespace Unnamed_Space_Game
 
     class Bezier2D
     {
+        public enum PointType
+        {
+            Linear,
+            Curve,
+            ZigZag,
+            EaseInOut,
+        }
         Vector2 multiplyer;
         public float Rotation { get; private set; }
         public Vector2 Location { get; private set; }
         Bezier xCurve;
         Bezier yCurve;
+
+        public Bezier2D(double timeMulti, Vector2 start, Vector2 end, PointType command, int degree = 0)
+        {
+            switch (command)
+            {
+                case PointType.Linear:
+                    Bezier2D(new Bezier(timeMulti, do)
+                    break;
+            }
+        }
 
         public Bezier2D(Bezier xCurve, Bezier yCurve, Vector2 multiplyer)
         {
@@ -89,7 +106,7 @@ namespace Unnamed_Space_Game
             Location = BezierFuncs.Get().BezierCalc(points, time);
             return true;
         }
-
+         
         public bool Update(double thyme)
         {
             time = thyme;
