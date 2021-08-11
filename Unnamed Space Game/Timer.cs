@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Unnamed_Space_Game
 {
-    public struct Timer
+    public class Timer
     {
         TimeSpan Wait;
         TimeSpan until;

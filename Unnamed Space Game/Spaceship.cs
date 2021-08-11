@@ -124,6 +124,10 @@ namespace Unnamed_Space_Game
             {
                 exhaustTimer = new Timer(30);
             }
+            else
+            {
+                exhaustTimer = new Timer(defaultETime);
+            }
         }
         #endregion
 
