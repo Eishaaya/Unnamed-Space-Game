@@ -20,8 +20,13 @@ namespace Unnamed_Space_Game
         Enemy testAnimatingSprite;
         Camera camera;
         Dictionary<Enemy.EnemyState, FrameObject> frames = new Dictionary<Enemy.EnemyState, FrameObject>();
-        Bezier testBezier;
-        Bezier timeBezier;
+        //HalfBezier testBezier;
+        //HalfBezier timeBezier;
+        //Bezier bezier;
+        //Bezier linear;
+
+        Bezier2D bezier;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -184,8 +189,14 @@ namespace Unnamed_Space_Game
             //                            .
             #endregion
 
-            timeBezier = new Bezier(5, new double[] { 0, 1, 0, 1 });
-            testBezier = new Bezier(1, new double[] { 0, 0, 1, 1 });
+            //timeBezier = new HalfBezier(5, new double[] { 0, 1, 0, 1 });
+            //testBezier = new HalfBezier(1, new double[] { 0, 0, 1, 1 });
+
+            bezier = new Bezier2D(new Bezier(5, new double[] { 0, 0, 1, 1 }, new double[] { 0, 2, -1, 1 }),
+                                  new Bezier(5, new double[] { 0, .3, .7, 1 }, new double[] { 0, 0, 1, 1 }));
+
+
+
         }
 
         TextureFrame[] LoadFromFolder(params string[] folderPath)
@@ -233,14 +244,16 @@ namespace Unnamed_Space_Game
 
         protected override void Update(GameTime gameTime)
         {
-            timeBezier.Update(gameTime);
-            testBezier.Update(timeBezier.Location);
-            testAnimatingSprite.Location = new Vector2((float)testBezier.Location * 1000, testAnimatingSprite.Location.Y);
+            //timeBezier.Update(gameTime);
+            //testBezier.Update(timeBezier.Location);
+            bezier.Update(gameTime);
+            testAnimatingSprite.Location = new Vector2(bezier.Location.X * 1000, 1000 - bezier.Location.Y * 1000);
+            testAnimatingSprite.rotation = (bezier.Rotation - MathHelper.ToRadians(90)) * -1;
             testAnimatingSprite.Update(gameTime);
             ship.Update(gameTime);
-           // testAnimatingSprite.Rotate(360, .1f);
-           // testAnimatingSprite.Pulsate(200, .1f);
-           // testAnimatingSprite.Vibrate(200, .1f);            
+            // testAnimatingSprite.Rotate(360, .1f);
+            // testAnimatingSprite.Pulsate(200, .1f);
+            // testAnimatingSprite.Vibrate(200, .1f);            
             camera.Update();
             base.Update(gameTime);
         }

@@ -18,14 +18,59 @@ namespace Unnamed_Space_Game
         }
     }
 
-    class Bezier
+    class Bezier2D
     {
-        double timeMultiplier;
-        double time;
-        double[] points;
+        public float Rotation { get; private set; }
+        public Vector2 Location { get; private set; }
+        Bezier xCurve;
+        Bezier yCurve;
+
+        public Bezier2D(Bezier xCurve, Bezier yCurve)
+        {
+            this.xCurve = xCurve;
+            this.yCurve = yCurve;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+
+            if (yCurve.Update(gameTime) && xCurve.Update(gameTime))
+            {
+                UpdateProperties();
+            }
+        }
+        void UpdateProperties()
+        {
+            var oldLocation = Location;
+            Location = new Vector2((float)xCurve.Location, (float)yCurve.Location);
+            Rotation = oldLocation.PointAt(Location);
+        }
+    }
+
+    class Bezier : HalfBezier
+    {
+        HalfBezier timeBezier;
+
+        public Bezier(double timeMulti, double[] timepoints, double[] points, double location = 0)
+            : base(1, points, location)
+        {
+            timeBezier = new HalfBezier(timeMulti, timepoints);
+        }
+
+        public override bool Update(GameTime gameTime)
+        {
+            timeBezier.Update(gameTime);
+            return Update(timeBezier.Location);
+        }
+    }
+    class HalfBezier
+    {
+        protected double timeMultiplier;
+        protected double time;
+        protected double[] points;
         public double Location { get; set; }
 
-        public Bezier(double timeMulti, double[] points, double location = 0)
+        public HalfBezier(double timeMulti, double[] points, double location = 0)
         {
             Location = location;
             this.time = 0;
@@ -33,24 +78,27 @@ namespace Unnamed_Space_Game
             this.points = points;
         }
 
-        public void Update(GameTime gameTime)
+        public virtual bool Update(GameTime gameTime)
         {
             if (time >= 1)
             {
-                return;
+                return false;
             }
             time += (gameTime.ElapsedGameTime.TotalMilliseconds) / timeMultiplier / 1000;
             Location = BezierFuncs.Get().BezierCalc(points, time);
+            return true;
         }
 
-        public void Update(double thyme)
-        {    
+        public bool Update(double thyme)
+        {
             time = thyme;
             if (thyme >= 1)
             {
                 time = 1;
+                return false;
             }
             Location = BezierFuncs.Get().BezierCalc(points, time);
+            return true;
         }
     }
 
@@ -99,7 +147,7 @@ namespace Unnamed_Space_Game
 
             var answer = rowFact / (colFact * bothFact);
             cents.Add(key, answer);
-            return answer;            
+            return answer;
         }
     }
 }

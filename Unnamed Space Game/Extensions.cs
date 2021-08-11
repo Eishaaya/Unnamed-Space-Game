@@ -24,6 +24,17 @@ namespace Unnamed_Space_Game
             }
         }
 
+        public static float Slope (Vector2 point1, Vector2 point2)
+        {
+            return (point2.Y - point1.Y) / (point2.X - point1.X);
+        }
+
+        public static float PointAt (this Vector2 start, Vector2 target)
+        {
+            var difference = target - start;
+            return (float)Math.Atan2(difference.Y, difference.X);
+        }
+
         public static int Factorial(this int number)
         {
             int result = 1;            
