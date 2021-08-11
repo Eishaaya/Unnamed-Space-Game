@@ -32,7 +32,7 @@ namespace Unnamed_Space_Game
         public static float PointAt (this Vector2 start, Vector2 target)
         {
             var difference = target - start;
-            return (float)Math.Atan2(difference.Y, difference.X);
+            return (float)Math.Atan2(difference.X, difference.Y);
         }
 
         public static int Factorial(this int number)

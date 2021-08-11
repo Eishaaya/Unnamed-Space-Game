@@ -20,20 +20,21 @@ namespace Unnamed_Space_Game
 
     class Bezier2D
     {
+        Vector2 multiplyer;
         public float Rotation { get; private set; }
         public Vector2 Location { get; private set; }
         Bezier xCurve;
         Bezier yCurve;
 
-        public Bezier2D(Bezier xCurve, Bezier yCurve)
+        public Bezier2D(Bezier xCurve, Bezier yCurve, Vector2 multiplyer)
         {
             this.xCurve = xCurve;
             this.yCurve = yCurve;
+            this.multiplyer = multiplyer;
         }
 
         public void Update(GameTime gameTime)
         {
-
             if (yCurve.Update(gameTime) && xCurve.Update(gameTime))
             {
                 UpdateProperties();
@@ -42,7 +43,7 @@ namespace Unnamed_Space_Game
         void UpdateProperties()
         {
             var oldLocation = Location;
-            Location = new Vector2((float)xCurve.Location, (float)yCurve.Location);
+            Location = new Vector2((float)xCurve.Location * multiplyer.X, (float)yCurve.Location * multiplyer.Y);
             Rotation = oldLocation.PointAt(Location);
         }
     }
@@ -80,7 +81,7 @@ namespace Unnamed_Space_Game
 
         public virtual bool Update(GameTime gameTime)
         {
-            if (time >= 1)
+            if (time >= 1 || time < 0)
             {
                 return false;
             }
@@ -95,6 +96,11 @@ namespace Unnamed_Space_Game
             if (thyme >= 1)
             {
                 time = 1;
+                return false;
+            }
+            else if (thyme <= 0)
+            {
+                time = 0;
                 return false;
             }
             Location = BezierFuncs.Get().BezierCalc(points, time);

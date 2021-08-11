@@ -192,8 +192,9 @@ namespace Unnamed_Space_Game
             //timeBezier = new HalfBezier(5, new double[] { 0, 1, 0, 1 });
             //testBezier = new HalfBezier(1, new double[] { 0, 0, 1, 1 });
 
-            bezier = new Bezier2D(new Bezier(5, new double[] { 0, 0, 1, 1 }, new double[] { 0, 2, -1, 1 }),
-                                  new Bezier(5, new double[] { 0, .3, .7, 1 }, new double[] { 0, 0, 1, 1 }));
+            bezier = new Bezier2D(new Bezier(5, new double[] { 1, 1, 0, 0 }, new double[] { 0, 2, -1, 1 }),
+                                  new Bezier(5, new double[] { 1, .7, .3, 0 }, new double[] { 0, 0, 1, 1 }),
+                                  new Vector2(1000, 1000));
 
 
 
@@ -247,8 +248,8 @@ namespace Unnamed_Space_Game
             //timeBezier.Update(gameTime);
             //testBezier.Update(timeBezier.Location);
             bezier.Update(gameTime);
-            testAnimatingSprite.Location = new Vector2(bezier.Location.X * 1000, 1000 - bezier.Location.Y * 1000);
-            testAnimatingSprite.rotation = (bezier.Rotation - MathHelper.ToRadians(90)) * -1;
+            testAnimatingSprite.Location = new Vector2(bezier.Location.X, bezier.Location.Y);
+            testAnimatingSprite.rotation = (bezier.Rotation) * -1 + MathHelper.Pi;
             testAnimatingSprite.Update(gameTime);
             ship.Update(gameTime);
             // testAnimatingSprite.Rotate(360, .1f);
