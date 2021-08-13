@@ -196,6 +196,7 @@ namespace Unnamed_Space_Game
                                   new Bezier(5, new double[] { 1, .7, .3, 0 }, new double[] { 0, 0, 1, 1 }),
                                   new Vector2(1000, 1000));
 
+            bezier = Bezier2D.BuildBezier2D(5, new Vector2(0, 0), new Vector2(1000, 1000), Bezier2D.PointType.Linear);
 
 
         }

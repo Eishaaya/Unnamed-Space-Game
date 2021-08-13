@@ -33,13 +33,26 @@ namespace Unnamed_Space_Game
         Bezier xCurve;
         Bezier yCurve;
 
-        public Bezier2D(double timeMulti, Vector2 start, Vector2 end, PointType command, int degree = 0)
+        public static Bezier2D BuildBezier2D(double timeMulti, Vector2 start, Vector2 end, PointType command, int degree = 0)
         {
+            //int xFlipper = 1;
+            //if (start.X > end.X)
+            //{
+            //    xFlipper = -1;
+            //}
+            //int yFlipper = 1;
+            //if (start.Y > end.Y)
+            //{
+            //    yFlipper = -1;
+            //}
             switch (command)
             {
                 case PointType.Linear:
-                    Bezier2D(new Bezier(timeMulti, do)
-                    break;
+                    return new Bezier2D(new Bezier(timeMulti, new double[] { 0, 1 }, new double[] { start.X, end.X }, start.X),
+                                        new Bezier(timeMulti, new double[] { 0, 1 }, new double[] { start.Y, end.Y }, start.Y),
+                                        new Vector2(1, 1));
+                default:
+                    return null;
             }
         }
 
